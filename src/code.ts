@@ -1,5 +1,14 @@
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/share';
+import { fromEvent } from 'rxjs/Observable/fromEvent';
+
+const observableMouse = fromEvent(document, 'mousemove');
+
+setTimeout(() => {
+  const subscription = observableMouse.subscribe(
+    (x: any) => addItem(x)
+  )
+}, 2000);
 
 const observable = Observable.create((observer:any) => {
   try {
