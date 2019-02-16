@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs/Observable';
+import { from } from 'rxjs/Observable/from';
 import 'rxjs/add/operator/share';
 import { fromEvent } from 'rxjs/Observable/fromEvent';
 import { Subject } from 'rxjs/Subject';
@@ -7,6 +8,7 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { AsyncSubject } from 'rxjs/AsyncSubject';
 import { merge } from 'rxjs/observable/merge';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/pluck';
 
 const addItem = (val:any) => {
   const node = document.createElement("li");
@@ -129,6 +131,14 @@ const observable2 = Observable.create((observer:any) => {
 const newObs = merge(observable, observable2);
 
 newObs.subscribe((x:any) => addItem(x))
+
+from([
+  {first: 'Gary', last: 'Simon', age: '34'},
+  {first: 'Jane', last: 'Simon', age: '34'},
+  {first: 'John', last: 'Simon', age: '34'},
+])
+  .pluck('first')
+  .subscribe((x:any) => addItem(x))
 
 // const rSubject = new ReplaySubject(30, 500);
 // rSubject.subscribe(
