@@ -2,6 +2,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/share';
 import { fromEvent } from 'rxjs/Observable/fromEvent';
 import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 const addItem = (val:any) => {
   const node = document.createElement("li");
@@ -38,6 +39,21 @@ subject.next('The third thing has been sent');
 observer2.unsubscribe()
 
 subject.next('A final thing has been sent');
+
+const bSubject = new BehaviorSubject('First');
+bSubject.subscribe(
+  data => addItem('Observer behavior 1: '+data),
+  err => addItem(err),
+  () => addItem('Observer behavior 1 Completed')
+)
+
+bSubject.next('The first thing has been sent');
+bSubject.next('...Observer 2 is about to subscirbe...');
+
+
+const bObserver2 = bSubject.subscribe(
+  data => addItem('Observer behavior 2: '+data)
+)
 
 // const observable = Observable.create((observer:any) => {
 //   try {
