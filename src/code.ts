@@ -5,6 +5,8 @@ import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { AsyncSubject } from 'rxjs/AsyncSubject';
+import 'rxjs/observable/merge';
+import { merge } from 'rxjs/observable/merge';
 
 const addItem = (val:any) => {
   const node = document.createElement("li");
@@ -99,6 +101,34 @@ setTimeout(() => {
 setTimeout(() => {
   aObserver.unsubscribe()
 }, 2000)
+
+const observable = Observable.create((observer:any) => {
+  try {
+    observer.next('O1: Hey guys!')
+    observer.next('O1: How are you?')
+    setTimeout(() => {
+      observer.next('O1: I am good')
+    }, 2000)
+  } catch(err) {
+    observer.error(err)
+  }
+})
+
+const observable2 = Observable.create((observer:any) => {
+  try {
+    observer.next('O2: Hey guys!')
+    observer.next('O2: How are you?')
+    setTimeout(() => {
+      observer.next('O2: I am good')
+    }, 2000)
+  } catch(err) {
+    observer.error(err)
+  }
+})
+
+const newObs = merge(observable, observable2);
+
+newObs.subscribe((x:any) => addItem(x))
 
 // const rSubject = new ReplaySubject(30, 500);
 // rSubject.subscribe(
