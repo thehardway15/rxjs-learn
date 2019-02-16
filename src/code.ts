@@ -4,6 +4,7 @@ import { fromEvent } from 'rxjs/Observable/fromEvent';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { AsyncSubject } from 'rxjs/AsyncSubject';
 
 const addItem = (val:any) => {
   const node = document.createElement("li");
@@ -56,8 +57,8 @@ const bObserver2 = bSubject.subscribe(
   data => addItem('Observer behavior 2: '+data)
 )
 
-const rSubject = new ReplaySubject(30, 500);
-rSubject.subscribe(
+const rSubject = new ReplaySubject(30, 200);
+const rObserver = rSubject.subscribe(
   data => addItem('Observer replay 1: '+data),
   err => addItem(err),
   () => addItem('Observer replay 1 Completed')
@@ -70,7 +71,50 @@ setTimeout(() => {
   const rObserver2 = rSubject.subscribe(
     data => addItem('Observer replay 2: '+data)
   )
+  rObserver.add(rObserver2)
 }, 500);
+
+setTimeout(() => {
+  rObserver.unsubscribe()
+}, 2000)
+
+const aSubject = new AsyncSubject();
+const aObserver = aSubject.subscribe(
+  data => addItem('Observer async 1: '+data),
+  err => addItem(err),
+  () => addItem('Observer async 1 Completed')
+)
+
+let j = 1;
+let aint = setInterval(() => aSubject.next(j++), 100);
+
+setTimeout(() => {
+  const aObserver2 = aSubject.subscribe(
+    data => addItem('Observer async 2: '+data)
+  )
+  aObserver.add(aObserver2)
+  aSubject.complete()
+}, 500);
+
+setTimeout(() => {
+  aObserver.unsubscribe()
+}, 2000)
+
+// const rSubject = new ReplaySubject(30, 500);
+// rSubject.subscribe(
+//   data => addItem('Observer replay 1: '+data),
+//   err => addItem(err),
+//   () => addItem('Observer replay 1 Completed')
+// )
+
+// let i = 1;
+// let int = setInterval(() => rSubject.next(i++), 100);
+
+// setTimeout(() => {
+//   const rObserver2 = rSubject.subscribe(
+//     data => addItem('Observer replay 2: '+data)
+//   )
+// }, 500);
 
 // const observable = Observable.create((observer:any) => {
 //   try {
