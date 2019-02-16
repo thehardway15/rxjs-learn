@@ -5,8 +5,8 @@ import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { AsyncSubject } from 'rxjs/AsyncSubject';
-import 'rxjs/observable/merge';
 import { merge } from 'rxjs/observable/merge';
+import 'rxjs/add/operator/map';
 
 const addItem = (val:any) => {
   const node = document.createElement("li");
@@ -124,7 +124,7 @@ const observable2 = Observable.create((observer:any) => {
   } catch(err) {
     observer.error(err)
   }
-})
+}).map((val:any) => val.toUpperCase())
 
 const newObs = merge(observable, observable2);
 
