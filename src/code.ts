@@ -56,21 +56,21 @@ const bObserver2 = bSubject.subscribe(
   data => addItem('Observer behavior 2: '+data)
 )
 
-const rSubject = new ReplaySubject(2);
+const rSubject = new ReplaySubject(30, 500);
 rSubject.subscribe(
   data => addItem('Observer replay 1: '+data),
   err => addItem(err),
   () => addItem('Observer replay 1 Completed')
 )
 
-rSubject.next('The first thing has been sent');
-rSubject.next('Another thing has been sent');
-rSubject.next('...Observer 2 is about to subscirbe...');
+let i = 1;
+let int = setInterval(() => rSubject.next(i++), 100);
 
-
-const rObserver2 = rSubject.subscribe(
-  data => addItem('Observer replay 2: '+data)
-)
+setTimeout(() => {
+  const rObserver2 = rSubject.subscribe(
+    data => addItem('Observer replay 2: '+data)
+  )
+}, 500);
 
 // const observable = Observable.create((observer:any) => {
 //   try {
