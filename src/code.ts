@@ -3,6 +3,7 @@ import 'rxjs/add/operator/share';
 import { fromEvent } from 'rxjs/Observable/fromEvent';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 const addItem = (val:any) => {
   const node = document.createElement("li");
@@ -11,7 +12,7 @@ const addItem = (val:any) => {
   document.getElementById('output').appendChild(node);
 }
 
-const observableMouse = fromEvent(document, 'mousemove');
+// const observableMouse = fromEvent(document, 'mousemove');
 
 // setTimeout(() => {
 //   const subscription = observableMouse.subscribe(
@@ -53,6 +54,22 @@ bSubject.next('...Observer 2 is about to subscirbe...');
 
 const bObserver2 = bSubject.subscribe(
   data => addItem('Observer behavior 2: '+data)
+)
+
+const rSubject = new ReplaySubject(2);
+rSubject.subscribe(
+  data => addItem('Observer replay 1: '+data),
+  err => addItem(err),
+  () => addItem('Observer replay 1 Completed')
+)
+
+rSubject.next('The first thing has been sent');
+rSubject.next('Another thing has been sent');
+rSubject.next('...Observer 2 is about to subscirbe...');
+
+
+const rObserver2 = rSubject.subscribe(
+  data => addItem('Observer replay 2: '+data)
 )
 
 // const observable = Observable.create((observer:any) => {
